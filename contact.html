@@ -1,1525 +1,2265 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Contact — Aman</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        :root{
-            --paper:#fbfaf8;
-            --ink:#111014;
-            --violet:#6328e6;
-            --light-violet:#dcd0ff;
-            --soft:#efebf3;
-            --muted:#77727d;
-            --line:#ddd9e0;
-            --ease:cubic-bezier(.16,1,.3,1);
-            --smooth:cubic-bezier(.77,0,.18,1);
-        }
-
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-        }
-
-        html{
-            scroll-behavior:smooth;
-        }
-
-        body{
-            min-height:100vh;
-            overflow-x:hidden;
-            background:var(--paper);
-            color:var(--ink);
-            font-family:"DM Sans",sans-serif;
-        }
-
-        a{
-            color:inherit;
-            text-decoration:none;
-        }
-
-        button,
-        input,
-        textarea{
-            font:inherit;
-        }
-
-        /* =====================================================
-           INTRO
-        ===================================================== */
-
-        .page-intro{
-            position:fixed;
-            inset:0;
-            z-index:9999;
-            background:var(--ink);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            pointer-events:none;
-            animation:introOut 1s var(--smooth) 1.05s forwards;
-        }
-
-        .intro-content{
-            text-align:center;
-            color:#fff;
-        }
-
-        .intro-number{
-            display:block;
-            margin-bottom:13px;
-            font-family:"Space Grotesk",sans-serif;
-            font-size:8px;
-            letter-spacing:.3em;
-            color:#8d8792;
-            opacity:0;
-            animation:introText .6s var(--ease) .05s forwards;
-        }
-
-        .intro-text{
-            font-family:"Space Grotesk",sans-serif;
-            font-size:clamp(18px,3vw,28px);
-            letter-spacing:-.04em;
-            opacity:0;
-            transform:translateY(18px);
-            animation:introText .7s var(--ease) .15s forwards;
-        }
-
-        @keyframes introText{
-            to{
-                opacity:1;
-                transform:translateY(0);
-            }
-        }
-
-        @keyframes introOut{
-            to{
-                clip-path:inset(0 0 100% 0);
-            }
-        }
-
-        /* =====================================================
-           BACKGROUND
-        ===================================================== */
-
-        .noise{
-            position:fixed;
-            inset:0;
-            z-index:-3;
-            pointer-events:none;
-            opacity:.035;
-            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
-        }
-
-        .grid{
-            position:fixed;
-            inset:0;
-            z-index:-4;
-            pointer-events:none;
-            background-image:
-                linear-gradient(to right,rgba(17,16,20,.035) 1px,transparent 1px),
-                linear-gradient(to bottom,rgba(17,16,20,.035) 1px,transparent 1px);
-            background-size:70px 70px;
-        }
-
-        .ambient{
-            position:fixed;
-            width:550px;
-            height:550px;
-            border-radius:50%;
-            right:-220px;
-            top:-230px;
-            z-index:-2;
-            pointer-events:none;
-            background:radial-gradient(
-                circle,
-                rgba(99,40,230,.14),
-                rgba(99,40,230,.035) 42%,
-                transparent 70%
-            );
-            animation:ambientMove 10s ease-in-out infinite alternate;
-        }
-
-        @keyframes ambientMove{
-            from{
-                transform:translate(0,0) scale(1);
-            }
-            to{
-                transform:translate(-70px,70px) scale(1.12);
-            }
-        }
-
-        /* =====================================================
-           HEADER
-        ===================================================== */
-
-        header{
-            position:fixed;
-            top:0;
-            left:0;
-            width:100%;
-            height:82px;
-            padding:0 5vw;
-            z-index:500;
-
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-
-            background:rgba(251,250,248,.78);
-            backdrop-filter:blur(18px);
-            -webkit-backdrop-filter:blur(18px);
-
-            border-bottom:1px solid rgba(221,217,224,.75);
-
-            animation:headerIn .9s var(--ease) 1.4s both;
-        }
-
-        @keyframes headerIn{
-            from{
-                opacity:0;
-                transform:translateY(-20px);
-            }
-            to{
-                opacity:1;
-                transform:translateY(0);
-            }
-        }
-
-        /* =====================================================
-           LOGO
-        ===================================================== */
-
-        .logo{
-            display:flex;
-            align-items:center;
-            gap:11px;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:13px;
-            font-weight:600;
-            letter-spacing:.08em;
-        }
-
-        .logo-mark{
-            width:35px;
-            height:35px;
-            border-radius:50%;
-            display:grid;
-            place-items:center;
-
-            background:var(--ink);
-            color:#fff;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:13px;
-
-            /* Original black logo stays unchanged */
-            transition:none;
-        }
-
-        .logo:hover .logo-mark{
-            background:var(--ink);
-            color:#fff;
-            transform:none;
-            filter:none;
-            opacity:1;
-            box-shadow:none;
-        }
-
-        /* =====================================================
-           BACK
-        ===================================================== */
-
-        .back-home{
-            display:flex;
-            align-items:center;
-            gap:10px;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:9px;
-            letter-spacing:.16em;
-            text-transform:uppercase;
-
-            color:var(--muted);
-            transition:.3s ease;
-        }
-
-        .back-home-icon{
-            width:29px;
-            height:29px;
-            border:1px solid var(--line);
-            border-radius:50%;
-
-            display:grid;
-            place-items:center;
-
-            transition:.35s var(--ease);
-        }
-
-        .back-home:hover{
-            color:var(--violet);
-        }
-
-        .back-home:hover .back-home-icon{
-            border-color:var(--violet);
-            transform:translateX(-4px);
-        }
-
-        /* =====================================================
-           MAIN
-        ===================================================== */
-
-        main{
-            min-height:100vh;
-            padding:145px 8vw 65px;
-            position:relative;
-        }
-
-        .page-number{
-            position:absolute;
-            right:4vw;
-            top:51%;
-
-            transform:rotate(90deg);
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:8px;
-            letter-spacing:.22em;
-            color:#aaa5ad;
-        }
-
-        /* =====================================================
-           HERO
-        ===================================================== */
-
-        .hero{
-            max-width:1200px;
-            margin:auto;
-        }
-
-        .eyebrow{
-            display:flex;
-            align-items:center;
-            gap:13px;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:8px;
-            letter-spacing:.22em;
-            text-transform:uppercase;
-            color:var(--muted);
-
-            opacity:0;
-            transform:translateY(15px);
-            animation:rise .8s var(--ease) 1.5s forwards;
-        }
-
-        .eyebrow-line{
-            width:36px;
-            height:1px;
-            background:var(--violet);
-        }
-
-        .hero-title{
-            margin-top:29px;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:clamp(70px,12.5vw,175px);
-            line-height:.81;
-            letter-spacing:-.078em;
-            font-weight:500;
-
-            overflow:hidden;
-        }
-
-        .hero-title span{
-            display:block;
-            opacity:0;
-            transform:translateY(105%);
-            animation:titleReveal 1s var(--ease) forwards;
-        }
-
-        .hero-title span:first-child{
-            animation-delay:1.58s;
-        }
-
-        .hero-title span:last-child{
-            color:var(--violet);
-            animation-delay:1.72s;
-        }
-
-        @keyframes titleReveal{
-            to{
-                opacity:1;
-                transform:translateY(0);
-            }
-        }
-
-        .hero-copy{
-            max-width:470px;
-            margin:48px 0 0 auto;
-
-            color:var(--muted);
-            font-size:15px;
-            line-height:1.75;
-
-            opacity:0;
-            transform:translateY(20px);
-            animation:rise .8s var(--ease) 1.95s forwards;
-        }
-
-        @keyframes rise{
-            to{
-                opacity:1;
-                transform:translateY(0);
-            }
-        }
-
-        /* =====================================================
-           CONTACT GRID
-        ===================================================== */
-
-        .contact-area{
-            max-width:1200px;
-            margin:105px auto 0;
-
-            display:grid;
-            grid-template-columns:.78fr 1.22fr;
-            gap:110px;
-        }
-
-        /* =====================================================
-           LEFT SIDE
-        ===================================================== */
-
-        .contact-intro{
-            opacity:0;
-            transform:translateY(30px);
-            animation:rise .8s var(--ease) 2.08s forwards;
-        }
-
-        .contact-intro-label{
-            font-family:"Space Grotesk",sans-serif;
-            font-size:9px;
-            letter-spacing:.2em;
-            text-transform:uppercase;
-            color:#aaa5ad;
-            margin-bottom:20px;
-        }
-
-        .contact-intro h2{
-            max-width:370px;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:clamp(25px,3vw,40px);
-            line-height:1.05;
-            letter-spacing:-.055em;
-            font-weight:500;
-        }
-
-        .contact-intro h2 em{
-            font-style:normal;
-            color:var(--violet);
-        }
-
-        .contact-intro p{
-            max-width:330px;
-            margin-top:25px;
-
-            color:var(--muted);
-            font-size:13px;
-            line-height:1.8;
-        }
-
-        .email-box{
-            margin-top:48px;
-            padding-top:20px;
-            border-top:1px solid var(--line);
-            max-width:320px;
-        }
-
-        .email-label{
-            display:block;
-            margin-bottom:9px;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:8px;
-            letter-spacing:.18em;
-            text-transform:uppercase;
-            color:#aaa5ad;
-        }
-
-        .email-link{
-            display:inline-flex;
-            align-items:center;
-            gap:10px;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:13px;
-
-            transition:.35s var(--ease);
-        }
-
-        .email-link-arrow{
-            color:var(--violet);
-            transition:.35s var(--ease);
-        }
-
-        .email-link:hover{
-            color:var(--violet);
-        }
-
-        .email-link:hover .email-link-arrow{
-            transform:translate(3px,-3px);
-        }
-
-        /* =====================================================
-           FORM
-        ===================================================== */
-
-        .contact-form{
-            opacity:0;
-            transform:translateY(30px);
-            animation:rise .8s var(--ease) 2.2s forwards;
-        }
-
-        .field{
-            position:relative;
-            margin-bottom:38px;
-        }
-
-        .field label{
-            display:block;
-            margin-bottom:10px;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:8px;
-            letter-spacing:.18em;
-            text-transform:uppercase;
-            color:#8c878f;
-        }
-
-        .field input,
-        .field textarea{
-            width:100%;
-
-            border:0;
-            border-bottom:1px solid var(--line);
-            outline:none;
-
-            background:transparent;
-
-            color:var(--ink);
-
-            padding:9px 0 15px;
-
-            font-size:16px;
-
-            transition:border-color .35s ease;
-        }
-
-        .field textarea{
-            min-height:125px;
-            resize:none;
-        }
-
-        .field input::placeholder,
-        .field textarea::placeholder{
-            color:#b2adb4;
-            transition:.3s ease;
-        }
-
-        .field input:focus::placeholder,
-        .field textarea:focus::placeholder{
-            opacity:.35;
-            transform:translateX(5px);
-        }
-
-        .field input:focus,
-        .field textarea:focus{
-            border-color:var(--violet);
-        }
-
-        .field::after{
-            content:"";
-
-            position:absolute;
-            left:0;
-            bottom:0;
-
-            width:0;
-            height:1px;
-
-            background:var(--violet);
-
-            transition:width .5s var(--ease);
-        }
-
-        .field:focus-within::after{
-            width:100%;
-        }
-
-        /* =====================================================
-           BUTTON
-        ===================================================== */
-
-        .submit-row{
-            margin-top:47px;
-
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:25px;
-        }
-
-        .form-note{
-            max-width:210px;
-
-            font-size:9px;
-            line-height:1.6;
-            color:#99949c;
-        }
-
-        .submit-btn{
-            position:relative;
-
-            min-width:185px;
-            height:58px;
-
-            border:0;
-            border-radius:100px;
-
-            background:var(--ink);
-            color:#fff;
-
-            cursor:pointer;
-
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            gap:15px;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:9px;
-            letter-spacing:.16em;
-            text-transform:uppercase;
-
-            overflow:hidden;
-
-            transition:transform .4s var(--ease);
-        }
-
-        .submit-btn::before{
-            content:"";
-
-            position:absolute;
-            inset:0;
-
-            background:var(--violet);
-
-            transform:translateY(100%);
-
-            transition:transform .5s var(--ease);
-        }
-
-        .submit-btn span{
-            position:relative;
-            z-index:2;
-        }
-
-        .submit-arrow{
-            font-size:14px;
-            transition:transform .35s var(--ease);
-        }
-
-        .submit-btn:hover{
-            transform:translateY(-4px);
-        }
-
-        .submit-btn:hover::before{
-            transform:translateY(0);
-        }
-
-        .submit-btn:hover .submit-arrow{
-            transform:translate(4px,-4px);
-        }
-
-        /* =====================================================
-           SUCCESS
-        ===================================================== */
-
-        .success{
-            display:none;
-
-            margin-top:22px;
-            padding:14px 17px;
-
-            border-left:2px solid var(--violet);
-            background:rgba(99,40,230,.045);
-
-            color:var(--ink);
-            font-size:11px;
-            line-height:1.6;
-        }
-
-        .success.show{
-            display:block;
-            animation:successIn .5s var(--ease);
-        }
-
-        @keyframes successIn{
-            from{
-                opacity:0;
-                transform:translateY(10px);
-            }
-            to{
-                opacity:1;
-                transform:translateY(0);
-            }
-        }
-
-        /* =====================================================
-           FOOTER
-        ===================================================== */
-
-        footer{
-            max-width:1200px;
-            margin:95px auto 0;
-
-            padding-top:21px;
-            border-top:1px solid var(--line);
-
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-
-            font-family:"Space Grotesk",sans-serif;
-            font-size:8px;
-            letter-spacing:.15em;
-            text-transform:uppercase;
-
-            color:#8c878f;
-        }
-
-        /* =====================================================
-           MOBILE
-        ===================================================== */
-
-        @media(max-width:900px){
-
-            header{
-                height:70px;
-                padding:0 6vw;
-            }
-
-            main{
-                padding:120px 7vw 55px;
-            }
-
-            .page-number{
-                display:none;
-            }
-
-            .hero-title{
-                font-size:clamp(62px,17vw,115px);
-            }
-
-            .hero-copy{
-                margin:40px 0 0;
-                font-size:13px;
-                max-width:430px;
-            }
-
-            .contact-area{
-                grid-template-columns:1fr;
-                gap:65px;
-                margin-top:80px;
-            }
-
-            .contact-intro{
-                order:2;
-            }
-
-            .contact-form{
-                order:1;
-            }
-
-            footer{
-                margin-top:70px;
-            }
-        }
-
-        @media(max-width:520px){
-
-            header{
-                padding:0 5vw;
-            }
-
-            .logo{
-                font-size:11px;
-            }
-
-            .logo-mark{
-                width:31px;
-                height:31px;
-            }
-
-            .back-home{
-                font-size:8px;
-            }
-
-            .back-home-icon{
-                width:26px;
-                height:26px;
-            }
-
-            main{
-                padding:112px 7vw 45px;
-            }
-
-            .eyebrow{
-                font-size:7px;
-            }
-
-            .hero-title{
-                margin-top:25px;
-                font-size:18vw;
-            }
-
-            .hero-copy{
-                margin-top:35px;
-                font-size:12.5px;
-                line-height:1.75;
-            }
-
-            .contact-area{
-                margin-top:65px;
-                gap:55px;
-            }
-
-            .contact-intro h2{
-                font-size:27px;
-            }
-
-            .contact-intro p{
-                font-size:12.5px;
-            }
-
-            .email-box{
-                margin-top:35px;
-            }
-
-            .field{
-                margin-bottom:29px;
-            }
-
-            .field input,
-            .field textarea{
-                font-size:14px;
-            }
-
-            .submit-row{
-                flex-direction:column;
-                align-items:flex-start;
-                margin-top:38px;
-            }
-
-            .form-note{
-                max-width:260px;
-            }
-
-            .submit-btn{
-                width:100%;
-            }
-
-            footer{
-                flex-direction:column;
-                align-items:flex-start;
-                gap:12px;
-            }
-
-            .ambient{
-                width:330px;
-                height:330px;
-            }
-        }
-/* update logo */
-
-    .logo-mark{
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Contact — Aman</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --paper:#fbfaf8;
+    --ink:#111014;
+    --violet:#6328e6;
+    --light-violet:#dcd0ff;
+    --soft:#efebf3;
+    --muted:#77727d;
+    --line:#ddd9e0;
+    --ease:cubic-bezier(.16,1,.3,1);
+    --smooth:cubic-bezier(.77,0,.18,1);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"DM Sans",sans-serif;
+    overflow-x:hidden;
+}
+
+body.no-scroll{
+    overflow:hidden;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+img{
+    -webkit-user-drag:none;
+    user-select:none;
+}
+
+/* ================= INTRO ================= */
+
+.page-intro{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:var(--ink);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    animation:introOut 1s var(--smooth) 1.05s forwards;
+    pointer-events:none;
+}
+
+.intro-content{
+    text-align:center;
+    overflow:hidden;
+}
+
+.intro-number{
+    display:block;
+    font-family:"Space Grotesk",sans-serif;
+    font-size:12px;
+    letter-spacing:.22em;
+    color:#aaa4b1;
+    margin-bottom:12px;
+    animation:introText .8s var(--ease) forwards;
+}
+
+.intro-text{
+    font-family:"Space Grotesk",sans-serif;
+    font-size:clamp(35px,6vw,80px);
+    font-weight:500;
+    letter-spacing:-.045em;
+    animation:introText .9s var(--ease) .08s both;
+}
+
+@keyframes introText{
+    from{
+        opacity:0;
+        transform:translateY(35px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes introOut{
+    to{
+        opacity:0;
+        visibility:hidden;
+    }
+}
+
+/* ================= BACKGROUND ================= */
+
+.noise{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+
+.grid{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-2;
+    opacity:.22;
+    background-image:
+        linear-gradient(to right,rgba(17,16,20,.035) 1px,transparent 1px),
+        linear-gradient(to bottom,rgba(17,16,20,.035) 1px,transparent 1px);
+    background-size:80px 80px;
+}
+
+.ambient{
+    position:fixed;
+    width:430px;
+    height:430px;
+    border-radius:50%;
+    background:rgba(99,40,230,.055);
+    filter:blur(30px);
+    top:15%;
+    right:-160px;
+    z-index:-1;
+    animation:ambientMove 10s ease-in-out infinite alternate;
+}
+
+@keyframes ambientMove{
+    from{
+        transform:translate(0,0);
+    }
+    to{
+        transform:translate(-90px,70px);
+    }
+}
+
+/* ================= HEADER ================= */
+
+header{
+    height:82px;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 8vw;
+    border-bottom:1px solid rgba(221,217,224,.75);
+    background:rgba(251,250,248,.84);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    animation:headerIn 1s var(--ease) 1.35s both;
+}
+
+@keyframes headerIn{
+    from{
+        opacity:0;
+        transform:translateY(-20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    font-family:"Space Grotesk",sans-serif;
+    font-weight:600;
+}
+
+.logo-mark{
     position:relative;
-    width:35px;
-    height:35px;
+    width:42px;
+    height:42px;
     border-radius:50%;
     display:grid;
     place-items:center;
-    background:transparent;
-    flex-shrink:0;
+    overflow:hidden;
 }
 
-/* Animated ring */
 .logo-mark::before{
     content:"";
     position:absolute;
-    inset:-3px;
+    inset:0;
     border-radius:50%;
-
     background:conic-gradient(
         from 0deg,
-        transparent 0deg,
-        transparent 70deg,
-        var(--violet) 130deg,
-        #a98cff 180deg,
-        transparent 240deg,
-        transparent 360deg
+        var(--violet),
+        #a88cff,
+        var(--violet),
+        #fff,
+        var(--violet)
     );
-
     animation:logoRing 2.8s linear infinite;
-
-    z-index:-1;
 }
 
-/* Inner background so ring stays clean */
 .logo-mark::after{
     content:"";
     position:absolute;
-    inset:-1px;
+    inset:2px;
     border-radius:50%;
     background:var(--paper);
-    z-index:-1;
 }
 
 .logo-mark img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-    border-radius:50%;
     position:relative;
     z-index:2;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    object-fit:cover;
 }
 
-/* Ring rotation */
 @keyframes logoRing{
-    from{
-        transform:rotate(0deg);
-    }
     to{
         transform:rotate(360deg);
     }
 }
 
-/* Hover = slightly faster */
-.logo:hover .logo-mark::before{
+.logo-mark:hover::before{
     animation-duration:1.5s;
 }
 
-/* Image itself unchanged */
-.logo:hover .logo-mark img{
-    filter:none;
-    opacity:1;
-    transform:none;
-}</style>
+.back-home{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--muted);
+    transition:.35s var(--ease);
+}
+
+.back-home i{
+    width:34px;
+    height:34px;
+    border:1px solid var(--line);
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    transition:.35s var(--ease);
+}
+
+.back-home:hover{
+    color:var(--ink);
+}
+
+.back-home:hover i{
+    background:var(--violet);
+    color:#fff;
+    border-color:var(--violet);
+    transform:translateX(-4px);
+}
+
+/* ================= MAIN ================= */
+
+main{
+    position:relative;
+    z-index:1;
+    padding:145px 8vw 65px;
+}
+
+.page-number{
+    position:absolute;
+    top:170px;
+    right:4vw;
+    font-size:10px;
+    letter-spacing:.2em;
+    color:#aaa5ae;
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+}
+
+.hero{
+    max-width:1100px;
+    animation:rise 1s var(--ease) 1.35s both;
+}
+
+@keyframes rise{
+    from{
+        opacity:0;
+        transform:translateY(35px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.eyebrow{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.19em;
+    color:var(--violet);
+    margin-bottom:28px;
+}
+
+.eyebrow::before{
+    content:"";
+    width:38px;
+    height:1px;
+    background:var(--violet);
+}
+
+.hero h1{
+    font-family:"Space Grotesk",sans-serif;
+    font-size:clamp(64px,10vw,150px);
+    line-height:.84;
+    font-weight:600;
+    letter-spacing:-.075em;
+    margin-bottom:42px;
+}
+
+.hero h1 span{
+    display:block;
+    overflow:hidden;
+}
+
+.hero h1 span:nth-child(1){
+    animation:titleReveal .9s var(--ease) 1.45s both;
+}
+
+.hero h1 span:nth-child(2){
+    color:var(--violet);
+    animation:titleReveal .9s var(--ease) 1.55s both;
+}
+
+@keyframes titleReveal{
+    from{
+        opacity:0;
+        transform:translateY(80px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.hero-copy{
+    max-width:560px;
+    margin-left:auto;
+    font-size:18px;
+    line-height:1.7;
+    color:var(--muted);
+}
+
+/* ================= CONTACT GRID ================= */
+
+.contact-grid{
+    display:grid;
+    grid-template-columns:.78fr 1.22fr;
+    gap:110px;
+    margin-top:120px;
+    animation:rise 1s var(--ease) 1.6s both;
+}
+
+.contact-intro{
+    padding-top:8px;
+}
+
+.contact-intro .small-title{
+    color:var(--violet);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:25px;
+}
+
+.contact-intro h2{
+    font-family:"Space Grotesk",sans-serif;
+    font-size:clamp(36px,4vw,58px);
+    line-height:1;
+    letter-spacing:-.055em;
+    margin-bottom:28px;
+}
+
+.contact-intro p{
+    color:var(--muted);
+    line-height:1.75;
+    max-width:430px;
+    margin-bottom:38px;
+}
+
+.email-box{
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--ink);
+    font-size:14px;
+    transition:.35s var(--ease);
+}
+
+.email-box i{
+    color:var(--violet);
+}
+
+.email-box:hover{
+    color:var(--violet);
+    border-color:var(--violet);
+}
+
+/* ================= FORM ================= */
+
+.contact-form{
+    position:relative;
+}
+
+.form-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
+
+.field{
+    position:relative;
+    margin-bottom:30px;
+}
+
+.field label{
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+    color:#45404a;
+}
+
+.field input,
+.field textarea,
+.field select{
+    width:100%;
+    border:0;
+    border-bottom:1px solid var(--line);
+    background:transparent;
+    outline:none;
+    padding:13px 0;
+    color:var(--ink);
+    font-size:15px;
+    border-radius:0;
+    transition:.3s ease;
+}
+
+.field textarea{
+    min-height:125px;
+    resize:vertical;
+}
+
+.field select{
+    appearance:none;
+    -webkit-appearance:none;
+    cursor:pointer;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+    border-color:var(--violet);
+}
+
+.field input::placeholder,
+.field textarea::placeholder{
+    color:#aaa5ae;
+}
+
+.field-error{
+    min-height:16px;
+    margin-top:6px;
+    color:#c43c55;
+    font-size:11px;
+    line-height:1.4;
+}
+
+.optional{
+    color:#aaa5ae;
+    font-size:9px;
+    letter-spacing:.05em;
+    margin-left:5px;
+}
+
+/* ================= CAPTCHA ================= */
+
+.captcha-wrap{
+    display:none;
+    margin:5px 0 30px;
+    padding-top:5px;
+}
+
+.captcha-label{
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:#45404a;
+    margin-bottom:11px;
+}
+
+.captcha-line{
+    display:flex;
+    align-items:stretch;
+    gap:10px;
+}
+
+.captcha-code{
+    min-width:155px;
+    height:48px;
+    padding:0 18px;
+    border:1px solid var(--line);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(99,40,230,.07),
+            rgba(255,255,255,.7)
+        );
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:4px;
+    color:var(--ink);
+    font-family:"Space Grotesk",sans-serif;
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:.24em;
+    user-select:none;
+    position:relative;
+    overflow:hidden;
+}
+
+.captcha-code::before,
+.captcha-code::after{
+    content:"";
+    position:absolute;
+    width:140%;
+    height:1px;
+    background:rgba(99,40,230,.18);
+    transform:rotate(-8deg);
+}
+
+.captcha-code::after{
+    transform:rotate(9deg);
+}
+
+.captcha-refresh{
+    width:48px;
+    height:48px;
+    flex:none;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--violet);
+    cursor:pointer;
+    border-radius:4px;
+    transition:.3s var(--ease);
+}
+
+.captcha-refresh:hover{
+    background:var(--violet);
+    color:#fff;
+    border-color:var(--violet);
+    transform:rotate(180deg);
+}
+
+.captcha-input{
+    flex:1;
+    min-width:0;
+    height:48px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.55);
+    outline:none;
+    padding:0 14px;
+    color:var(--ink);
+    border-radius:4px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    transition:.3s ease;
+}
+
+.captcha-input:focus{
+    border-color:var(--violet);
+    box-shadow:0 0 0 3px rgba(99,40,230,.08);
+}
+
+.captcha-note{
+    margin-top:8px;
+    color:#99939d;
+    font-size:10px;
+}
+
+/* ================= BUTTON ================= */
+
+.send-btn{
+    width:100%;
+    min-height:64px;
+    border:0;
+    background:var(--violet);
+    color:#fff;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    font-family:"Space Grotesk",sans-serif;
+    font-size:14px;
+    font-weight:600;
+    transition:
+        transform .3s var(--ease),
+        background .3s ease,
+        opacity .3s ease;
+}
+
+.send-btn span{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.send-btn i{
+    transition:.35s var(--ease);
+}
+
+.send-btn:hover{
+    background:#5420cb;
+}
+
+.send-btn:hover i{
+    transform:translateX(6px);
+}
+
+.send-btn:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+}
+
+/* ================= STATUS ================= */
+
+.form-status{
+    display:none;
+    margin-top:18px;
+    padding:15px 17px;
+    font-size:13px;
+    line-height:1.5;
+    border-left:3px solid var(--violet);
+    background:rgba(99,40,230,.06);
+    color:#3f3947;
+}
+
+.form-status.error{
+    border-color:#c43c55;
+    background:rgba(196,60,85,.06);
+}
+
+.success-message{
+    display:none;
+    text-align:center;
+    padding:75px 25px;
+    animation:successIn .8s var(--ease) both;
+}
+
+.success-icon{
+    width:64px;
+    height:64px;
+    border:1px solid var(--violet);
+    color:var(--violet);
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    margin:0 auto 25px;
+    font-size:21px;
+}
+
+.success-message h3{
+    font-family:"Space Grotesk",sans-serif;
+    font-size:clamp(35px,4vw,55px);
+    line-height:1;
+    letter-spacing:-.055em;
+    margin-bottom:18px;
+}
+
+.success-message h3 em{
+    color:var(--violet);
+    font-style:normal;
+}
+
+.success-message p{
+    color:var(--muted);
+    max-width:450px;
+    margin:auto;
+    line-height:1.7;
+}
+
+@keyframes successIn{
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+    margin-top:130px;
+    padding-top:28px;
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#99939d;
+    font-size:11px;
+}
+
+footer span:last-child{
+    color:var(--violet);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+    header{
+        padding:0 5vw;
+    }
+
+    main{
+        padding:125px 5vw 50px;
+    }
+
+    .page-number{
+        display:none;
+    }
+
+    .hero-copy{
+        margin-left:0;
+        margin-top:20px;
+    }
+
+    .contact-grid{
+        grid-template-columns:1fr;
+        gap:65px;
+        margin-top:80px;
+    }
+
+    .contact-intro p{
+        max-width:600px;
+    }
+
+    footer{
+        margin-top:90px;
+    }
+}
+
+@media(max-width:650px){
+
+    header{
+        height:72px;
+    }
+
+    .logo-mark{
+        width:38px;
+        height:38px;
+    }
+
+    .logo-mark img{
+        width:30px;
+        height:30px;
+    }
+
+    .back-home{
+        font-size:12px;
+    }
+
+    .back-home i{
+        width:31px;
+        height:31px;
+    }
+
+    main{
+        padding:110px 6vw 40px;
+    }
+
+    .hero h1{
+        font-size:clamp(58px,18vw,100px);
+        margin-bottom:30px;
+    }
+
+    .hero-copy{
+        font-size:15px;
+        line-height:1.65;
+    }
+
+    .contact-grid{
+        margin-top:65px;
+        gap:55px;
+    }
+
+    .form-row{
+        grid-template-columns:1fr;
+        gap:0;
+    }
+
+    .field{
+        margin-bottom:24px;
+    }
+
+    .captcha-line{
+        display:grid;
+        grid-template-columns:1fr 48px;
+        gap:8px;
+    }
+
+    .captcha-code{
+        min-width:0;
+        font-size:18px;
+    }
+
+    .captcha-input{
+        grid-column:1 / -1;
+        width:100%;
+    }
+
+    .send-btn{
+        min-height:58px;
+    }
+
+    .success-message{
+        padding:55px 10px;
+    }
+
+    footer{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:8px;
+        margin-top:70px;
+    }
+}
+
+/* ================= PROTECTION ================= */
+
+img{
+    pointer-events:none;
+}
+
+::selection{
+    background:var(--light-violet);
+    color:var(--ink);
+}
+
+input,
+textarea,
+select{
+    user-select:text;
+    -webkit-user-select:text;
+}
+</style>
 </head>
 
 <body>
 
-    <!-- =====================================================
-         INTRO
-    ===================================================== -->
+<!-- ================= PAGE INTRO ================= -->
 
-    <div class="page-intro">
+<div class="page-intro">
+    <div class="intro-content">
+        <span class="intro-number">04 / 04</span>
+        <div class="intro-text">Let's create.</div>
+    </div>
+</div>
 
-        <div class="intro-content">
+<div class="noise"></div>
+<div class="grid"></div>
+<div class="ambient"></div>
 
-            <span class="intro-number">
-                04 / 04
-            </span>
+<!-- ================= HEADER ================= -->
 
-            <div class="intro-text">
-                Let's create.
-            </div>
+<header>
 
+    <a href="index.html" class="logo">
+        <span class="logo-mark">
+            <img src="me.jpeg" alt="Aman">
+        </span>
+        <span>Aman.</span>
+    </a>
+
+    <a href="index.html" class="back-home">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Back home</span>
+    </a>
+
+</header>
+
+<!-- ================= MAIN ================= -->
+
+<main>
+
+    <div class="page-number">CONTACT / 04</div>
+
+    <section class="hero">
+
+        <div class="eyebrow">
+            04 / LET'S TALK
         </div>
 
-    </div>
+        <h1>
+            <span>HAVE AN</span>
+            <span>IDEA?</span>
+        </h1>
 
+        <p class="hero-copy">
+            Good things usually start with a simple conversation.
+            Tell me what you're thinking, what you're building,
+            or simply where you want to go next.
+        </p>
 
-    <!-- BACKGROUND -->
+    </section>
 
-    <div class="noise"></div>
-    <div class="grid"></div>
-    <div class="ambient"></div>
+    <!-- ================= CONTACT ================= -->
 
+    <section class="contact-grid">
 
-    <!-- =====================================================
-         HEADER
-    ===================================================== -->
+        <div class="contact-intro">
 
-    <header>
-
-     
-
-        <a href="index.html" class="logo">
-
-    <div class="logo-mark">
-        <img src="me.jpeg" alt="Aman Logo">
-    </div>
-
-    <span>AMAN</span>
-
-</a>
-
-        <a href="index.html" class="back-home">
-
-            <span class="back-home-icon">
-                ←
-            </span>
-
-            Back home
-
-        </a>
-
-    </header>
-
-
-    <!-- =====================================================
-         MAIN
-    ===================================================== -->
-
-    <main>
-
-        <div class="page-number">
-            04 — CONTACT
-        </div>
-
-
-        <!-- =================================================
-             HERO
-        ================================================= -->
-
-        <section class="hero">
-
-            <div class="eyebrow">
-
-                <span class="eyebrow-line"></span>
-
-                04 / LET'S TALK
-
+            <div class="small-title">
+                Start something
             </div>
 
+            <h2>
+                Let's turn an idea
+                into something real.
+            </h2>
 
-            <h1 class="hero-title">
-
-                <span>
-                    HAVE AN
-                </span>
-
-                <span>
-                    IDEA?
-                </span>
-
-            </h1>
-
-
-            <p class="hero-copy">
-                Good things usually start with a simple conversation.
-                Tell me what you're thinking, what you're building,
-                or simply where you want to go next.
+            <p>
+                Whether it's a website, digital product, creative
+                experiment, or a new opportunity — I'm always open
+                to meaningful conversations and interesting ideas.
             </p>
 
-        </section>
+            <a
+                href="mailto:ydvaman2326@gmail.com"
+                class="email-box"
+            >
+                <i class="fa-regular fa-envelope"></i>
+                <span>ydvaman2326@gmail.com</span>
+            </a>
 
+        </div>
 
-        <!-- =================================================
-             CONTACT AREA
-        ================================================= -->
+        <!-- ================= FORM ================= -->
 
-        <section class="contact-area">
-
-
-            <!-- LEFT -->
-
-            <div class="contact-intro">
-
-                <div class="contact-intro-label">
-                    Start something
-                </div>
-
-
-                <h2>
-                    Let's turn an
-                    <em>idea</em> into
-                    something real.
-                </h2>
-
-
-                <p>
-                    I work on digital experiences that combine
-                    thoughtful design, frontend development,
-                    interaction and motion.
-                </p>
-
-
-                <div class="email-box">
-
-                    <span class="email-label">
-                        Prefer email?
-                    </span>
-
-                    <a
-                        href="mailto:your-email@example.com"
-                        class="email-link"
-                    >
-
-                        <span>
-                            kumaraman971990@gmail.com
-                        </span>
-
-                        <span class="email-link-arrow">
-                            ↗
-                        </span>
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- FORM -->
+        <div class="contact-form">
 
             <form
-                class="contact-form"
                 id="contactForm"
+                action="https://formsubmit.co/ajax/ydvaman2326@gmail.com"
+                method="POST"
+                novalidate
             >
+            <input type="hidden" name="Source Website" value="Aman's Digital Space">
+<input type="hidden" name="Source URL" value="https://student-amankumar.github.io/aman-digital-space/">
+
+                <input
+                    type="hidden"
+                    name="_subject"
+                    value="New Portfolio Contact — Aman"
+                >
+
+                <input
+                    type="hidden"
+                    name="_template"
+                    value="table"
+                >
+
+                <input
+                    type="hidden"
+                    name="_captcha"
+                    value="false"
+                >
+
+                <input
+                    type="hidden"
+                    name="Time"
+                    id="formTime"
+                >
+
+                <!-- HONEYPOT -->
+                <input
+                    type="text"
+                    name="_honey"
+                    tabindex="-1"
+                    autocomplete="off"
+                    style="position:absolute;left:-9999px;opacity:0;"
+                >
+
+                <div class="form-row">
+
+                    <div class="field">
+
+                        <label for="cname">
+                            Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="cname"
+                            name="Name"
+                            placeholder="Your name"
+                            autocomplete="name"
+                            required
+                        >
+
+                        <div
+                            class="field-error"
+                            id="nameError"
+                        ></div>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="cemail">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="cemail"
+                            name="Email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            required
+                        >
+
+                        <div
+                            class="field-error"
+                            id="emailError"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="field">
+
+                        <label for="linkType">
+                            Professional Link
+                        </label>
+
+                        <select
+                            id="linkType"
+                            name="Professional Link Type"
+                            required
+                        >
+                            <option value="">
+                                Select type
+                            </option>
+                            <option value="Website">
+                                Website
+                            </option>
+                            <option value="LinkedIn">
+                                LinkedIn
+                            </option>
+                            <option value="GitHub">
+                                GitHub
+                            </option>
+                        </select>
+
+                        <div
+                            class="field-error"
+                            id="linkTypeError"
+                        ></div>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="professionalUrl">
+                            Professional / Project URL
+                        </label>
+
+                        <input
+                            type="url"
+                            id="professionalUrl"
+                            name="Professional / Project URL"
+                            placeholder="https://..."
+                            required
+                        >
+
+                        <div
+                            class="field-error"
+                            id="urlError"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="field">
+
+                        <label for="company">
+                            Project / Company Name
+                            <span class="optional">OPTIONAL</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="company"
+                            name="Project / Company Name"
+                            placeholder="Project or company"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="role">
+                            Role / Requirement
+                            <span class="optional">OPTIONAL</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="role"
+                            name="Role / Requirement"
+                            placeholder="What are you looking for?"
+                        >
+
+                    </div>
+
+                </div>
 
                 <div class="field">
 
-                    <label for="name">
-                        01 / Your name
+                    <label for="subject">
+                        Subject
                     </label>
 
                     <input
                         type="text"
-                        id="name"
-                        name="name"
-                        placeholder="What should I call you?"
-                        autocomplete="name"
+                        id="subject"
+                        name="Subject"
+                        placeholder="What's this about?"
                         required
                     >
 
-                </div>
-
-
-                <div class="field">
-
-                    <label for="email">
-                        02 / Email
-                    </label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Where can I reach you?"
-                        autocomplete="email"
-                        required
-                    >
+                    <div
+                        class="field-error"
+                        id="subjectError"
+                    ></div>
 
                 </div>
-
 
                 <div class="field">
 
                     <label for="message">
-                        03 / Your message
+                        Message
                     </label>
 
                     <textarea
                         id="message"
-                        name="message"
-                        placeholder="Tell me what you're thinking..."
+                        name="Message"
+                        placeholder="Tell me a little about your idea..."
                         required
                     ></textarea>
 
-                </div>
-
-
-                <div class="submit-row">
-
-                    <p class="form-note">
-                        No complicated process.
-                        Just your idea, your message,
-                        and a conversation.
-                    </p>
-
-
-                    <button
-                        type="submit"
-                        class="submit-btn"
-                    >
-
-                        <span>
-                            Send message
-                        </span>
-
-                        <span class="submit-arrow">
-                            ↗
-                        </span>
-
-                    </button>
+                    <div
+                        class="field-error"
+                        id="messageError"
+                    ></div>
 
                 </div>
 
+                <!-- ================= CAPTCHA ================= -->
 
                 <div
-                    class="success"
-                    id="successMessage"
+                    class="captcha-wrap"
+                    id="captchaWrap"
                 >
-                    Message prepared successfully.
-                    I'll get back to you as soon as possible.
+
+                    <label class="captcha-label">
+                        Quick verification
+                    </label>
+
+                    <div class="captcha-line">
+
+                        <div
+                            class="captcha-code"
+                            id="captchaCode"
+                            aria-label="Verification code"
+                        ></div>
+
+                        <button
+                            type="button"
+                            class="captcha-refresh"
+                            id="captchaRefresh"
+                            aria-label="Refresh verification code"
+                            title="Refresh code"
+                        >
+                            <i class="fa-solid fa-rotate"></i>
+                        </button>
+
+                        <input
+                            type="text"
+                            id="captchaInput"
+                            class="captcha-input"
+                            placeholder="Enter the code"
+                            autocomplete="off"
+                            maxlength="6"
+                            spellcheck="false"
+                        >
+
+                    </div>
+
+                    <div class="captcha-note">
+                        Enter the 6-character code shown above.
+                    </div>
+
+                    <div
+                        class="field-error"
+                        id="captchaError"
+                    ></div>
+
                 </div>
+
+                <button
+                    type="submit"
+                    class="send-btn"
+                    id="sendBtn"
+                >
+                    <span>
+                        Send message
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+
+                    <i class="fa-regular fa-paper-plane"></i>
+                </button>
+
+                <div
+                    class="form-status"
+                    id="formStatus"
+                ></div>
 
             </form>
 
-        </section>
+            <!-- ================= SUCCESS ================= -->
+
+            <div
+                class="success-message"
+                id="successMessage"
+            >
+
+                <div class="success-icon">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+
+                <h3>
+                    Thank you for
+                    <em>getting in touch.</em>
+                </h3>
+
+                <p>
+                    Your message has been received successfully,
+                    and I’ll be in touch with you shortly.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+        <span>© 2026 Aman Kumar</span>
+        <span>Built with curiosity &amp; code.</span>
+    </footer>
+
+</main>
+
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"
+crossorigin="anonymous"
+referrerpolicy="no-referrer">
+</script>
+
+<script>
+
+/* =========================================================
+   FORM ELEMENTS
+========================================================= */
+
+const contactForm = document.getElementById("contactForm");
+const sendBtn = document.getElementById("sendBtn");
+
+const formStatus = document.getElementById("formStatus");
+const successMessage = document.getElementById("successMessage");
+
+const captchaWrap = document.getElementById("captchaWrap");
+const captchaCode = document.getElementById("captchaCode");
+const captchaInput = document.getElementById("captchaInput");
+const captchaRefresh = document.getElementById("captchaRefresh");
+
+let captchaRequired = false;
+let currentCaptcha = "";
 
 
-        <!-- =================================================
-             FOOTER
-        ================================================= -->
+/* =========================================================
+   CAPTCHA
+   Reliable + case-insensitive + no auto-changing on error
+========================================================= */
 
-        <footer>
+const captchaChars =
+    "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
-            <span>
-                AMAN — DIGITAL CREATOR
-            </span>
+function normalizeCaptcha(value){
 
-            <span>
-                © <span id="year"></span> — Made with curiosity
-            </span>
+    return String(value || "")
+        .trim()
+        .toUpperCase()
+        .replace(/[\s-]/g, "");
 
-        </footer>
-
-    </main>
-
-
-    <script>
-
-        /* =====================================================
-           YEAR
-        ===================================================== */
-
-        document.getElementById("year").textContent =
-            new Date().getFullYear();
+}
 
 
-        /* =====================================================
-           FORM
-        ===================================================== */
+function generateCaptcha(){
 
-        const form =
-            document.getElementById("contactForm");
+    let code = "";
 
-        const successMessage =
-            document.getElementById("successMessage");
+    for(let i = 0; i < 6; i++){
+
+        const randomIndex =
+            Math.floor(
+                Math.random() * captchaChars.length
+            );
+
+        code += captchaChars[randomIndex];
+
+    }
+
+    currentCaptcha = code;
+
+    captchaCode.textContent = code;
+
+    captchaInput.value = "";
+
+    clearError("captchaError");
+
+}
 
 
-        form.addEventListener("submit", function(event){
+captchaRefresh.addEventListener(
+    "click",
+    generateCaptcha
+);
 
-            event.preventDefault();
 
-            successMessage.classList.add("show");
+/* =========================================================
+   HELPERS
+========================================================= */
 
-            form.reset();
+function showError(id,message){
 
-            setTimeout(() => {
+    const el = document.getElementById(id);
 
-                successMessage.scrollIntoView({
-                    behavior:"smooth",
-                    block:"nearest"
-                });
+    if(el){
+        el.textContent = message;
+    }
 
-            },100);
+}
 
+
+function clearError(id){
+
+    const el = document.getElementById(id);
+
+    if(el){
+        el.textContent = "";
+    }
+
+}
+
+
+function clearAllErrors(){
+
+    document
+        .querySelectorAll(".field-error")
+        .forEach(el => {
+            el.textContent = "";
         });
 
-
-        /* =====================================================
-           BUTTON MAGNETIC EFFECT
-        ===================================================== */
-
-        const submitButton =
-            document.querySelector(".submit-btn");
+}
 
 
-        if(window.innerWidth > 700){
+/* =========================================================
+   EMAIL VALIDATION
+========================================================= */
 
-            submitButton.addEventListener(
-                "mousemove",
-                function(event){
+const disposableDomains = new Set([
 
-                    const rect =
-                        submitButton.getBoundingClientRect();
+    "tempmail.com",
+    "temp-mail.org",
+    "10minutemail.com",
+    "guerrillamail.com",
+    "mailinator.com",
+    "yopmail.com",
+    "throwawaymail.com",
+    "fakeinbox.com",
+    "getnada.com",
+    "sharklasers.com",
+    "trashmail.com",
+    "maildrop.cc",
+    "dispostable.com"
 
-                    const x =
-                        event.clientX -
-                        rect.left -
-                        rect.width / 2;
-
-                    const y =
-                        event.clientY -
-                        rect.top -
-                        rect.height / 2;
-
-                    submitButton.style.transform =
-                        `translate(${x * .07}px, ${y * .07}px)`;
-                }
-            );
+]);
 
 
-            submitButton.addEventListener(
-                "mouseleave",
-                function(){
+const fakeEmailNames = new Set([
 
-                    submitButton.style.transform =
-                        "translate(0,0)";
-                }
-            );
+    "test",
+    "testing",
+    "fake",
+    "example",
+    "sample",
+    "demo",
+    "abc",
+    "xyz",
+    "asdf",
+    "qwerty"
+
+]);
+
+
+function validateEmail(value){
+
+    const email = value.trim().toLowerCase();
+
+    if(!email){
+
+        return "Please enter your email address.";
+
+    }
+
+    if(email.length > 254){
+
+        return "Email address is too long.";
+
+    }
+
+    if(email.includes(" ")){
+
+        return "Email cannot contain spaces.";
+
+    }
+
+    if((email.match(/@/g) || []).length !== 1){
+
+        return "Please enter a valid email address.";
+
+    }
+
+    const parts = email.split("@");
+
+    const local = parts[0];
+    const domain = parts[1];
+
+    if(!local || !domain){
+
+        return "Please enter a valid email address.";
+
+    }
+
+    if(local.length > 64){
+
+        return "Email username is too long.";
+
+    }
+
+    if(domain.length > 253){
+
+        return "Email domain is too long.";
+
+    }
+
+    if(local.startsWith(".") || local.endsWith(".")){
+
+        return "Please enter a valid email address.";
+
+    }
+
+    if(local.includes("..") || domain.includes("..")){
+
+        return "Please enter a valid email address.";
+
+    }
+
+    const emailRegex =
+        /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/;
+
+    if(!emailRegex.test(email)){
+
+        return "Please enter a valid email address.";
+
+    }
+
+    const domainParts = domain.split(".");
+
+    for(const part of domainParts){
+
+        if(
+            !part ||
+            part.startsWith("-") ||
+            part.endsWith("-")
+        ){
+
+            return "Please enter a valid email domain.";
 
         }
 
+    }
 
-        /* =====================================================
-           TAB TITLE
-        ===================================================== */
+    const tld =
+        domainParts[domainParts.length - 1];
 
-        document.addEventListener(
-            "visibilitychange",
-            function(){
+    if(
+        tld.length < 2 ||
+        !/^[a-z]+$/i.test(tld)
+    ){
 
-                if(document.hidden){
+        return "Please enter a valid email domain.";
 
-                    document.title =
-                        "Come back — Aman";
+    }
 
-                }else{
+    if(disposableDomains.has(domain)){
 
-                    document.title =
-                        "Contact — Aman";
+        return "Disposable email addresses are not accepted.";
 
-                }
+    }
 
-            }
+    if(
+        fakeEmailNames.has(local) &&
+        (
+            domain.includes("example") ||
+            domain.includes("test") ||
+            domain.includes("fake") ||
+            domain.includes("sample")
+        )
+    ){
+
+        return "Please use a genuine email address.";
+
+    }
+
+    return "";
+
+}
+
+
+/* =========================================================
+   PROFESSIONAL URL VALIDATION
+========================================================= */
+
+function validateProfessionalUrl(){
+
+    const type =
+        document.getElementById("linkType").value.trim();
+
+    const value =
+        document
+            .getElementById("professionalUrl")
+            .value
+            .trim();
+
+    if(!type){
+
+        return {
+            type:"linkType",
+            message:"Please select a link type."
+        };
+
+    }
+
+    if(!value){
+
+        return {
+            type:"url",
+            message:"Please enter your professional or project URL."
+        };
+
+    }
+
+    let url;
+
+    try{
+
+        url = new URL(value);
+
+    }catch{
+
+        return {
+            type:"url",
+            message:"Please enter a valid URL."
+        };
+
+    }
+
+    if(
+        url.protocol !== "http:" &&
+        url.protocol !== "https:"
+    ){
+
+        return {
+            type:"url",
+            message:"Only HTTP or HTTPS URLs are allowed."
+        };
+
+    }
+
+    const hostname =
+        url.hostname
+            .toLowerCase()
+            .replace(/^www\./,"");
+
+    if(type === "LinkedIn"){
+
+        if(
+            hostname !== "linkedin.com" &&
+            !hostname.endsWith(".linkedin.com")
+        ){
+
+            return {
+                type:"url",
+                message:"Please enter a valid LinkedIn URL."
+            };
+
+        }
+
+    }
+
+    if(type === "GitHub"){
+
+        if(
+            hostname !== "github.com" &&
+            !hostname.endsWith(".github.com")
+        ){
+
+            return {
+                type:"url",
+                message:"Please enter a valid GitHub URL."
+            };
+
+        }
+
+    }
+
+    if(type === "Website"){
+
+        if(
+            hostname === "linkedin.com" ||
+            hostname.endsWith(".linkedin.com") ||
+            hostname === "github.com" ||
+            hostname.endsWith(".github.com")
+        ){
+
+            return {
+                type:"url",
+                message:"Please choose LinkedIn or GitHub for this URL."
+            };
+
+        }
+
+    }
+
+    return null;
+
+}
+
+
+/* =========================================================
+   CAPTCHA VALIDATION
+========================================================= */
+
+function validateCaptcha(){
+
+    const entered =
+        normalizeCaptcha(captchaInput.value);
+
+    const actual =
+        normalizeCaptcha(currentCaptcha);
+
+    if(!entered){
+
+        showError(
+            "captchaError",
+            "Please enter the verification code."
         );
 
-    </script>
-<script>
-/* =====================================================
-   WEBSITE PROTECTION — CONTACT PAGE
-   DESKTOP + MOBILE
-===================================================== */
+        return false;
 
-(function () {
+    }
 
-    /* ---------------------------------------------
-       1. Disable right-click
-    --------------------------------------------- */
-    document.addEventListener("contextmenu", function (e) {
+    if(entered.length !== actual.length){
+
+        showError(
+            "captchaError",
+            "Incorrect verification code. Please try again."
+        );
+
+        return false;
+
+    }
+
+    if(entered !== actual){
+
+        showError(
+            "captchaError",
+            "Incorrect verification code. Please try again."
+        );
+
+        return false;
+
+    }
+
+    clearError("captchaError");
+
+    return true;
+
+}
+
+
+/* =========================================================
+   BASIC FORM VALIDATION
+========================================================= */
+
+function validateForm(){
+
+    clearAllErrors();
+
+    let valid = true;
+
+    const name =
+        document.getElementById("cname").value.trim();
+
+    const email =
+        document.getElementById("cemail").value.trim();
+
+    const linkType =
+        document.getElementById("linkType").value.trim();
+
+    const subject =
+        document.getElementById("subject").value.trim();
+
+    const message =
+        document.getElementById("message").value.trim();
+
+
+    if(!name){
+
+        showError(
+            "nameError",
+            "Please enter your name."
+        );
+
+        valid = false;
+
+    }
+
+
+    const emailError =
+        validateEmail(email);
+
+    if(emailError){
+
+        showError(
+            "emailError",
+            emailError
+        );
+
+        valid = false;
+
+    }
+
+
+    if(!linkType){
+
+        showError(
+            "linkTypeError",
+            "Please select a link type."
+        );
+
+        valid = false;
+
+    }
+
+
+    const urlResult =
+        validateProfessionalUrl();
+
+    if(urlResult){
+
+        showError(
+            urlResult.type === "linkType"
+                ? "linkTypeError"
+                : "urlError",
+            urlResult.message
+        );
+
+        valid = false;
+
+    }
+
+
+    if(!subject){
+
+        showError(
+            "subjectError",
+            "Please enter a subject."
+        );
+
+        valid = false;
+
+    }
+
+
+    if(!message){
+
+        showError(
+            "messageError",
+            "Please enter your message."
+        );
+
+        valid = false;
+
+    }
+
+
+    return valid;
+
+}
+
+
+/* =========================================================
+   FORM SUBMIT
+========================================================= */
+
+contactForm.addEventListener(
+    "submit",
+    async function(event){
+
+        event.preventDefault();
+
+        formStatus.style.display = "none";
+        formStatus.className = "form-status";
+
+        /*
+         * First submit:
+         * Validate complete form, then show CAPTCHA.
+         */
+
+        if(!captchaRequired){
+
+            if(!validateForm()){
+
+                return;
+
+            }
+
+            captchaRequired = true;
+
+            captchaWrap.style.display = "block";
+
+            generateCaptcha();
+
+            captchaInput.focus();
+
+            return;
+
+        }
+
+
+        /*
+         * Second submit:
+         * Validate form again + CAPTCHA.
+         */
+
+        if(!validateForm()){
+
+            return;
+
+        }
+
+
+        if(!validateCaptcha()){
+
+            captchaInput.focus();
+
+            return;
+
+        }
+
+
+        /* ================= SEND ================= */
+
+        sendBtn.disabled = true;
+
+        sendBtn.querySelector("span").innerHTML =
+            `
+            Sending
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            `;
+
+
+        const now =
+            new Date();
+
+        const indiaTime =
+            new Intl.DateTimeFormat(
+                "en-IN",
+                {
+                    timeZone:"Asia/Kolkata",
+                    dateStyle:"full",
+                    timeStyle:"medium"
+                }
+            ).format(now);
+
+
+        document.getElementById("formTime").value =
+            indiaTime;
+
+
+        try{
+
+            const formData =
+                new FormData(contactForm);
+
+
+            const response =
+                await fetch(
+                    contactForm.action,
+                    {
+                        method:"POST",
+                        body:formData,
+                        headers:{
+                            "Accept":"application/json"
+                        }
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if(
+                response.ok &&
+                (
+                    result.success === true ||
+                    result.success === "true"
+                )
+            ){
+
+                contactForm.style.display = "none";
+
+                successMessage.style.display = "block";
+
+                captchaRequired = false;
+
+            }else{
+
+                throw new Error(
+                    result.message ||
+                    "Something went wrong."
+                );
+
+            }
+
+
+        }catch(error){
+
+            formStatus.textContent =
+                "Unable to send your message right now. Please try again.";
+
+            formStatus.className =
+                "form-status error";
+
+            formStatus.style.display =
+                "block";
+
+
+            sendBtn.disabled = false;
+
+            sendBtn.querySelector("span").innerHTML =
+                `
+                Send message
+                <i class="fa-solid fa-arrow-right"></i>
+                `;
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   MAGNETIC BUTTON
+========================================================= */
+
+sendBtn.addEventListener(
+    "mousemove",
+    function(e){
+
+        const rect =
+            sendBtn.getBoundingClientRect();
+
+        const x =
+            e.clientX - rect.left - rect.width / 2;
+
+        const y =
+            e.clientY - rect.top - rect.height / 2;
+
+        sendBtn.style.transform =
+            `translate(${x * .07}px, ${y * .07}px)`;
+
+    }
+);
+
+
+sendBtn.addEventListener(
+    "mouseleave",
+    function(){
+
+        sendBtn.style.transform =
+            "translate(0,0)";
+
+    }
+);
+
+
+/* =========================================================
+   PROTECTION
+========================================================= */
+
+/* Right click */
+document.addEventListener(
+    "contextmenu",
+    function(e){
         e.preventDefault();
-    });
+    }
+);
 
 
-    /* ---------------------------------------------
-       2. Disable image dragging
-    --------------------------------------------- */
-    document.addEventListener("dragstart", function (e) {
-        if (e.target && e.target.tagName === "IMG") {
-            e.preventDefault();
-        }
-    });
+/* Image drag */
+document.addEventListener(
+    "dragstart",
+    function(e){
 
-
-    /* ---------------------------------------------
-       3. Disable image long-press / save menu
-    --------------------------------------------- */
-    document.addEventListener("touchstart", function (e) {
-
-        if (e.target && e.target.tagName === "IMG") {
-
-            e.target.style.webkitUserSelect = "none";
-            e.target.style.webkitTouchCallout = "none";
-            e.target.style.userSelect = "none";
-
-        }
-
-    }, { passive: true });
-
-
-    /* ---------------------------------------------
-       4. Disable common developer shortcuts
-       Desktop only
-    --------------------------------------------- */
-    document.addEventListener("keydown", function (e) {
-
-        const key = e.key.toLowerCase();
-
-        /* F12 */
-        if (e.key === "F12") {
-            e.preventDefault();
-            return false;
-        }
-
-        /* Ctrl + Shift + I */
-        if (e.ctrlKey && e.shiftKey && key === "i") {
-            e.preventDefault();
-            return false;
-        }
-
-        /* Ctrl + Shift + J */
-        if (e.ctrlKey && e.shiftKey && key === "j") {
-            e.preventDefault();
-            return false;
-        }
-
-        /* Ctrl + Shift + C */
-        if (e.ctrlKey && e.shiftKey && key === "c") {
-            e.preventDefault();
-            return false;
-        }
-
-        /* Ctrl + U */
-        if (e.ctrlKey && key === "u") {
-            e.preventDefault();
-            return false;
-        }
-
-        /* Ctrl + S */
-        if (e.ctrlKey && key === "s") {
-            e.preventDefault();
-            return false;
-        }
-
-        /* Ctrl + Shift + S */
-        if (e.ctrlKey && e.shiftKey && key === "s") {
-            e.preventDefault();
-            return false;
-        }
-
-    });
-
-
-    /* ---------------------------------------------
-       5. Disable selection outside form fields
-       Important:
-       Inputs / textarea remain usable
-    --------------------------------------------- */
-    document.addEventListener("selectstart", function (e) {
-
-        const target = e.target;
-
-        if (!target) return;
-
-        const tag = target.tagName;
-
-        const isFormField =
-            tag === "INPUT" ||
-            tag === "TEXTAREA" ||
-            tag === "SELECT" ||
-            target.isContentEditable;
-
-        if (!isFormField) {
+        if(
+            e.target.tagName === "IMG"
+        ){
             e.preventDefault();
         }
 
-    });
+    }
+);
 
 
-    /* ---------------------------------------------
-       6. Prevent image drag via CSS
-    --------------------------------------------- */
-    document.querySelectorAll("img").forEach(function (img) {
+/* Image long press / touch callout */
+document.addEventListener(
+    "touchstart",
+    function(e){
 
-        img.setAttribute("draggable", "false");
-
-        img.style.webkitUserDrag = "none";
-        img.style.userSelect = "none";
-        img.style.webkitUserSelect = "none";
-        img.style.webkitTouchCallout = "none";
-
-    });
-
-
-    /* ---------------------------------------------
-       7. Disable middle-click on images
-    --------------------------------------------- */
-    document.addEventListener("mousedown", function (e) {
-
-        if (e.target && e.target.tagName === "IMG" && e.button === 1) {
+        if(
+            e.target.tagName === "IMG"
+        ){
             e.preventDefault();
         }
 
-    });
+    },
+    {
+        passive:false
+    }
+);
 
 
-    /* ---------------------------------------------
-       8. Basic copy protection
-       Don't interfere with form inputs
-    --------------------------------------------- */
-    document.addEventListener("copy", function (e) {
+/* Keyboard protection */
+document.addEventListener(
+    "keydown",
+    function(e){
 
-        const target = e.target;
+        const key =
+            e.key.toLowerCase();
 
-        if (!target) return;
+        if(
+            e.key === "F12" ||
+            (
+                e.ctrlKey &&
+                e.shiftKey &&
+                ["i","j","c"].includes(key)
+            ) ||
+            (
+                e.ctrlKey &&
+                key === "u"
+            ) ||
+            (
+                e.ctrlKey &&
+                key === "s"
+            ) ||
+            (
+                e.ctrlKey &&
+                e.shiftKey &&
+                key === "s"
+            )
+        ){
 
-        const tag = target.tagName;
-
-        const isFormField =
-            tag === "INPUT" ||
-            tag === "TEXTAREA" ||
-            target.isContentEditable;
-
-        if (!isFormField) {
             e.preventDefault();
+
         }
 
-    });
+    }
+);
 
 
-    /* ---------------------------------------------
-       9. Disable cut outside form fields
-    --------------------------------------------- */
-    document.addEventListener("cut", function (e) {
+/* Selection protection */
+document.addEventListener(
+    "selectstart",
+    function(e){
 
-        const target = e.target;
+        const tag =
+            e.target.tagName;
 
-        if (!target) return;
+        if(
+            !["INPUT","TEXTAREA","SELECT"].includes(tag) &&
+            !e.target.isContentEditable
+        ){
 
-        const tag = target.tagName;
-
-        const isFormField =
-            tag === "INPUT" ||
-            tag === "TEXTAREA" ||
-            target.isContentEditable;
-
-        if (!isFormField) {
             e.preventDefault();
+
         }
 
-    });
+    }
+);
 
-})();
+
+/* Middle click on images */
+document.addEventListener(
+    "mousedown",
+    function(e){
+
+        if(
+            e.button === 1 &&
+            e.target.tagName === "IMG"
+        ){
+
+            e.preventDefault();
+
+        }
+
+    }
+);
+
+
+/* Copy / cut protection outside form fields */
+document.addEventListener(
+    "copy",
+    function(e){
+
+        const tag =
+            e.target.tagName;
+
+        if(
+            !["INPUT","TEXTAREA"].includes(tag)
+        ){
+
+            e.preventDefault();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "cut",
+    function(e){
+
+        const tag =
+            e.target.tagName;
+
+        if(
+            !["INPUT","TEXTAREA"].includes(tag)
+        ){
+
+            e.preventDefault();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   TAB TITLE
+========================================================= */
+
+const originalTitle =
+    "Contact — Aman";
+
+document.addEventListener(
+    "visibilitychange",
+    function(){
+
+        document.title =
+            document.hidden
+                ? "Come back — Aman"
+                : originalTitle;
+
+    }
+);
+
 </script>
+
 </body>
 </html>
-
